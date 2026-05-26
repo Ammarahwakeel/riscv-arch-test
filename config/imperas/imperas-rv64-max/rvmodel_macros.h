@@ -14,6 +14,8 @@
         .align 8; .global fromhost; fromhost: .dword 0;     \
         .popsection
 
+#define STANDARD_SM_SUPPORTED
+
 ##### STARTUP #####
 
 # Perform boot operations. Can be empty or left undefined unless needed for
@@ -95,7 +97,6 @@
 
 #define RVMODEL_TIMER_INT_SOON_DELAY 100
 
-// TODO: need to implement external interrupts in SAIL
 #define RVMODEL_MEXT_ADDRESS  0x80000000  /* Address of a memory mapped machine external interrupt generator */
 #define RVMODEL_SET_MEXT_INT(_R1, _R2)        \
   li _R1, 1;               \
