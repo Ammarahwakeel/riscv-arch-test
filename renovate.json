@@ -6,6 +6,15 @@
   "labels": ["dependencies"],
   "prHourlyLimit": 4,
   "prConcurrentLimit": 10,
+  "rebaseWhen": "conflicted",
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "automerge": true,
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "labels": ["dependencies", "security"],
+    "minimumReleaseAge": "4 hours"
+  },
   "git-submodules": {
     "enabled": true
   },
@@ -44,7 +53,7 @@
       "depNameTemplate": "tenstorrent/whisper",
       "datasourceTemplate": "git-refs",
       "packageNameTemplate": "https://github.com/tenstorrent/whisper",
-      "currentValueTemplate": "main"
+      "currentValueTemplate": "master"
     },
     {
       "description": "CVW commit in install script",
@@ -57,14 +66,58 @@
       "currentValueTemplate": "main"
     },
     {
-      "description": "RISC-V GCC toolchain version in CI workflow",
+      "description": "cv32e20-dv (cve2) commit in install script",
       "customType": "regex",
-      "managerFilePatterns": ["/^\\.github/workflows/regress\\.yml$/"],
+      "managerFilePatterns": ["/^\\.github/scripts/install-cve2\\.sh$/"],
+      "matchStrings": ["CVE2_DV_COMMIT=\"(?<currentDigest>[a-f0-9]+)\""],
+      "depNameTemplate": "openhwgroup/cv32e20-dv",
+      "datasourceTemplate": "git-refs",
+      "packageNameTemplate": "https://github.com/openhwgroup/cv32e20-dv",
+      "currentValueTemplate": "main"
+    },
+    {
+      "description": "cv32e40p-dv-review (cve4) commit in install script",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/scripts/install-cve4\\.sh$/"],
+      "matchStrings": ["CVE4_DV_COMMIT=\"(?<currentDigest>[a-f0-9]+)\""],
+      "depNameTemplate": "openhwgroup/cv32e40p-dv-review",
+      "datasourceTemplate": "git-refs",
+      "packageNameTemplate": "https://github.com/openhwgroup/cv32e40p-dv-review",
+      "currentValueTemplate": "main"
+    },
+    {
+      "description": "cv32e40x-dv (cve4) commit in install script",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/scripts/install-cve4\\.sh$/"],
+      "matchStrings": ["CVE40X_DV_COMMIT=\"(?<currentDigest>[a-f0-9]+)\""],
+      "depNameTemplate": "openhwgroup/cv32e40x-dv",
+      "datasourceTemplate": "git-refs",
+      "packageNameTemplate": "https://github.com/openhwgroup/cv32e40x-dv",
+      "currentValueTemplate": "main"
+    },
+    {
+      "description": "cv32e40x RTL hash pinned in cve4 install script",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/scripts/install-cve4\\.sh$/"],
+      "matchStrings": ["CVE40X_CORE_HASH=\"(?<currentDigest>[a-f0-9]+)\""],
+      "depNameTemplate": "openhwgroup/cv32e40x",
+      "datasourceTemplate": "git-refs",
+      "packageNameTemplate": "https://github.com/openhwgroup/cv32e40x",
+      "currentValueTemplate": "master"
+    },
+    {
+      "description": "RISC-V GCC toolchain version in CI workflow and Dockerfile",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/regress\\.yml$/",
+        "/^Dockerfile$/"
+      ],
       "matchStrings": [
-        "GCC_TOOLCHAIN_VERSION:\\s*\"(?<currentValue>[\\d.]+)\""
+        "RISCV_TOOLCHAIN_VERSION[=:]\\s*\"?(?<currentValue>[\\d.]+)\"?"
       ],
       "depNameTemplate": "riscv-collab/riscv-gnu-toolchain",
-      "datasourceTemplate": "github-releases"
+      "datasourceTemplate": "github-releases",
+      "versioningTemplate": "loose"
     },
     {
       "description": "LLVM version in CI workflow",
@@ -74,22 +127,49 @@
       "depNameTemplate": "llvm/llvm-project",
       "datasourceTemplate": "github-tags",
       "extractVersionTemplate": "^llvmorg-(?<version>\\d+)\\.\\d+\\.\\d+$"
+    },
+    {
+      "description": "Bundler version recorded in Gemfile.lock (kept in sync with .mise.toml gem:bundler)",
+      "customType": "regex",
+      "managerFilePatterns": ["/^framework/src/act/data/Gemfile\\.lock$/"],
+      "matchStrings": ["BUNDLED WITH\\s+(?<currentValue>[\\d.]+)"],
+      "depNameTemplate": "gem:bundler",
+      "packageNameTemplate": "bundler",
+      "datasourceTemplate": "rubygems"
     }
   ],
   "packageRules": [
     {
-      "description": "Do not update Python or Ruby language versions",
-      "matchDepNames": ["python", "ruby"],
+      "description": "Always use the latest version of specified packages",
+      "matchDepNames": [
+        "tenstorrent/whisper",
+        "riscv/riscv-isa-sim",
+        "openhwgroup/cvw",
+        "openhwgroup/cv32e20-dv",
+        "openhwgroup/cv32e40p-dv-review",
+        "openhwgroup/cv32e40x-dv",
+        "openhwgroup/cv32e40x",
+        "udb",
+        "udb-gen",
+        "idlc",
+        "udb_helpers"
+      ],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "Do not update Ruby major versions",
+      "matchDepNames": ["ruby"],
+      "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
       "description": "Keep ruff in sync across pyproject.toml dev deps and the pre-commit hook",
-      "matchDepNames": ["ruff", "https://github.com/astral-sh/ruff-pre-commit"],
+      "matchDepNames": ["ruff", "astral-sh/ruff-pre-commit"],
       "groupName": "ruff"
     },
     {
       "description": "Keep uv in sync across .mise.toml and the pre-commit hook",
-      "matchDepNames": ["uv", "https://github.com/astral-sh/uv-pre-commit"],
+      "matchDepNames": ["uv", "astral-sh/uv-pre-commit"],
       "groupName": "uv"
     },
     {
@@ -98,15 +178,13 @@
       "groupName": "github-actions"
     },
     {
-      "description": "Group remaining pre-commit hook bumps",
+      "description": "Group remaining pre-commit hook bumps (ruff/uv are grouped with their non-hook counterparts above)",
       "matchManagers": ["pre-commit"],
+      "matchDepNames": [
+        "!astral-sh/ruff-pre-commit",
+        "!astral-sh/uv-pre-commit"
+      ],
       "groupName": "pre-commit hooks",
-      "schedule": ["before 6am on monday"]
-    },
-    {
-      "description": "Pyright moves fast; keep it in its own PR",
-      "matchPackageNames": ["pyright"],
-      "groupName": "pyright",
       "schedule": ["before 6am on monday"]
     }
   ]
