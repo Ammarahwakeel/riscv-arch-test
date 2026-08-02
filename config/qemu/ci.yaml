@@ -31,7 +31,7 @@ ci_enabled: true
 #        Only Ssnpm_bare is affected (under Sv the CBOs page-fault, which QEMU does
 #        implement, so Ssnpm_sv39/sv48/sv57 pass); exclusion is per-extension so the whole
 #        suite is excluded. Verified against Sail 0.13.1 and Spike, which both fault.
-exclude_extensions: "Sm,S,Zacas,ZacasZabha,PMPSm,ExceptionsZalrsc,ExceptionsZicboU,ExceptionsZicboS,SvZicbo,Svinval,ExceptionsZaamo,ExceptionsSvZalrsc,Zama16b,SsstrictV,Smstateen,Zkr,ZawrsS,ZawrsU,SdtrigSm,SdtrigS,SdtrigU,ZicntrS,ZicntrU,Ssnpm"
+exclude_extensions: "Sm,S,Zacas,ZacasZabha,PMPSm,ExceptionsZalrsc,ExceptionsZicboU,ExceptionsZicboS,SvZicbo,Svinval,ExceptionsZaamo,ExceptionsSvZalrsc,Zama16b,SsstrictV,Smstateen,Zkr,ZawrsS,ZawrsU,SdtrigSm,SdtrigS,SdtrigU,ZicntrS,ZicntrU,Ssnpm,Smmpm,SmnpmS,SmnpmU"
 apt_packages: "libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build"
 shards: 1
 config_shards:
