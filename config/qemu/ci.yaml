@@ -21,8 +21,8 @@ ci_enabled: true
 # ZawrsU and ZawrsS fail on qemu due to stval mismatching, filed QEMU issue https://gitlab.com/qemu-project/qemu/-/work_items/4080
 # ZicntrS and ZicntrU fail on qemu because ecall increments instret. Filed QEMU issue: https://gitlab.com/qemu-project/qemu/-/work_items/4087
 # Ssnpm: QEMU CBOs do not fault on inaccessible addresses in bare mode, shifting trap signatures; Sv modes pass (due to page-faults which qemu implements).
-exclude_extensions: "Sm,S,Zacas,ZacasZabha,PMPSm,ExceptionsZalrsc,ExceptionsZicboU,ExceptionsZicboS,SvZicbo,Svinval,ExceptionsZaamo,ExceptionsSvZalrsc,Zama16b,SsstrictV,Smstateen,Zkr,ZawrsS,ZawrsU,SdtrigSm,SdtrigS,SdtrigU,ZicntrS,ZicntrU,Ssnpm,Smmpm,SmnpmS,SmnpmU"
-exclude_extensions: "Sm,S,Zacas,ZacasZabha,ExceptionsZalrsc,ExceptionsZicboU,ExceptionsZicboS,SvZicbo,Svinval,ExceptionsZaamo,ExceptionsSvZalrsc,Zama16b,SsstrictV,Smstateen,Zkr,ZawrsS,ZawrsU,SdtrigSm,SdtrigS,SdtrigU,ZicntrS,ZicntrU"
+exclude_extensions: "Sm,S,Zacas,ZacasZabha,ExceptionsZalrsc,ExceptionsZicboU,ExceptionsZicboS,SvZicbo,Svinval,ExceptionsZaamo,ExceptionsSvZalrsc,Zama16b,SsstrictV,Smstateen,Zkr,ZawrsS,ZawrsU,SdtrigSm,SdtrigS,SdtrigU,ZicntrS,ZicntrU,Ssnpm,Smmpm,SmnpmS,SmnpmU"
+
 install_script: ".github/scripts/install-qemu.sh"
 apt_packages: "libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build"
 shards: 1
