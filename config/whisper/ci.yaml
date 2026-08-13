@@ -11,9 +11,11 @@
 # cp_sret_m mprv=1 bins catch this: sail clears MPRV, whisper keeps it -> selfcheck mismatch.
 # ExceptionsSvZalrsc: Whisper reports page faults where Sail expects access faults.
 # Vx excluded because of https://github.com/tenstorrent/whisper/issues/35
+# Smmpm : MPRV + MXR  test cases failing. For MPRV Whisper reports page faults where Sail expects access faults. (Same as ExceptionsSvZalrsc)
+#TODO : MXR failure due to mepc mismatch (root cause =unknown)
 ci_enabled: true
 # TODO: Remove SsstrictV when sail SsstrictV is implemented
-exclude_extensions: "S,Sm,SsstrictSm,SsstrictS,SsstrictU,ExceptionsSvZalrsc,SsstrictV,Smstateen,Vx8,Vx16,Vx32,Vx64,SdtrigSm,SdtrigS,SdtrigU"
+exclude_extensions: "S,Sm,SsstrictSm,SsstrictS,SsstrictU,ExceptionsSvZalrsc,SsstrictV,Smstateen,Vx8,Vx16,Vx32,Vx64,SdtrigSm,SdtrigS,SdtrigU,Smmpm"
 exclude_configs:
   - whisper-rv32-max-spike-ref
   - whisper-rv64-max-spike-ref
