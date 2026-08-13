@@ -11,8 +11,10 @@
 # cp_sret_m mprv=1 bins catch this: sail clears MPRV, whisper keeps it -> selfcheck mismatch.
 # ExceptionsSvZalrsc: Whisper reports page faults where Sail expects access faults.
 # Vx excluded because of https://github.com/tenstorrent/whisper/issues/35
-# Smmpm : MPRV + MXR  test cases failing. For MPRV Whisper reports page faults where Sail expects access faults. (Same as ExceptionsSvZalrsc)
-#TODO : MXR failure due to mepc mismatch (root cause =unknown)
+# Smmpm : MPRV + MXR test cases failing. For MPRV, whisper reports page faults where Sail expects
+# access faults (same as ExceptionsSvZalrsc). For MXR, whisper drops pointer masking whenever
+# mstatus.MXR is set with no privilege check, so an M-mode access with mseccfg.PMM != 0 is left
+# unmasked; Sail and Spike still mask it. To be reported upstream.
 ci_enabled: true
 # TODO: Remove SsstrictV when sail SsstrictV is implemented
 exclude_extensions: "S,Sm,SsstrictSm,SsstrictS,SsstrictU,ExceptionsSvZalrsc,SsstrictV,Smstateen,Vx8,Vx16,Vx32,Vx64,SdtrigSm,SdtrigS,SdtrigU,Smmpm"
