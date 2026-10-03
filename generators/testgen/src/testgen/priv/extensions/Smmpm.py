@@ -14,12 +14,9 @@ from testgen.priv.extensions.ZpmCommon import (
     PMM_CONFIGS,
     SPLITS,
     generate_csr_write_tests,
-    generate_fault_address_tests,
+    generate_edge_case_tests,
     generate_instruction_sweep_tests,
-    generate_jalr_tests,
-    generate_misaligned_tests,
     generate_mprv_mpp_m_tests,
-    generate_mxr_tests,
     mprv_data_section,
     set_mxr,
     set_pmm_field,
@@ -62,13 +59,13 @@ def make_smmpm(test_data: TestData) -> list[TestChunk]:
             if split == EDGE_CASES:
                 lines.extend(
                     [
-                        *generate_misaligned_tests(prefix, test_data, COVERGROUP),
-                        *generate_jalr_tests(prefix, test_data, COVERGROUP),
-                        *generate_fault_address_tests(prefix, test_data, COVERGROUP),
-                        "#ifdef S_SUPPORTED",
-                        *generate_mxr_tests(prefix, test_data, COVERGROUP, status_csr="mstatus"),
-                        *set_mxr(False, test_data, "mstatus"),
-                        "#endif // S_SUPPORTED",
+                        *generate_edge_case_tests(
+                            prefix,
+                            test_data,
+                            COVERGROUP,
+                            status_csr="mstatus",
+                            status_guard="S_SUPPORTED",
+                        ),
                         *generate_csr_write_tests(prefix, pmlen, test_data, COVERGROUP, _CSR_TARGETS),
                     ]
                 )

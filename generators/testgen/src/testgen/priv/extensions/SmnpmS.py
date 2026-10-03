@@ -17,11 +17,8 @@ from testgen.priv.extensions.ZpmCommon import (
     data_page,
     data_slvl_tables,
     generate_csr_write_tests,
-    generate_fault_address_tests,
+    generate_edge_case_tests,
     generate_instruction_sweep_tests,
-    generate_jalr_tests,
-    generate_misaligned_tests,
-    generate_mxr_tests,
     generate_sign_extension_tests,
     map_pm_hi_page,
     satp_clear,
@@ -83,12 +80,7 @@ def _smnpms_chunk(
             lines.extend(generate_sign_extension_tests(prefix, mode, test_data, COVERGROUP))
         lines.extend(
             [
-                *generate_misaligned_tests(prefix, test_data, COVERGROUP),
-                *generate_jalr_tests(prefix, test_data, COVERGROUP, mxr=0),
-                *generate_fault_address_tests(prefix, test_data, COVERGROUP),
-                *generate_mxr_tests(prefix, test_data, COVERGROUP),
-                *generate_jalr_tests(prefix, test_data, COVERGROUP, mxr=1),
-                *set_mxr(False, test_data),
+                *generate_edge_case_tests(prefix, test_data, COVERGROUP, status_csr="sstatus"),
                 *generate_csr_write_tests(prefix, pmlen, test_data, COVERGROUP, ["sepc", "sscratch"]),
             ]
         )

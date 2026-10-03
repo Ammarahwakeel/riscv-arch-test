@@ -19,11 +19,8 @@ from testgen.priv.extensions.ZpmCommon import (
     csr_op,
     data_page,
     data_slvl_tables,
-    generate_fault_address_tests,
+    generate_edge_case_tests,
     generate_instruction_sweep_tests,
-    generate_jalr_tests,
-    generate_misaligned_tests,
-    generate_mxr_tests,
     generate_sign_extension_tests,
     generate_xlen_change_tests,
     map_pm_hi_page,
@@ -124,14 +121,13 @@ def _ssnpm_chunk(
         if not is_bare:
             lines.extend(generate_sign_extension_tests(prefix, mode, test_data, COVERGROUP))
         lines.extend(
-            [
-                *generate_misaligned_tests(prefix, test_data, COVERGROUP),
-                *generate_jalr_tests(prefix, test_data, COVERGROUP, mxr=0),
-                *generate_fault_address_tests(prefix, test_data, COVERGROUP),
-                *generate_mxr_tests(prefix, test_data, COVERGROUP, tsbi=True),
-                *generate_jalr_tests(prefix, test_data, COVERGROUP, mxr=1),
-                *set_mxr(False, test_data, tsbi=True),
-            ]
+            generate_edge_case_tests(
+                prefix,
+                test_data,
+                COVERGROUP,
+                status_csr="sstatus",
+                tsbi=True,
+            )
         )
 
     if not is_bare:

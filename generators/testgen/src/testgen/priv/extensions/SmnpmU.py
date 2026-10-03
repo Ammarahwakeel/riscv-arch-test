@@ -14,10 +14,8 @@ from testgen.priv.extensions.ZpmCommon import (
     PMM_CONFIGS,
     SPLITS,
     data_page,
-    generate_fault_address_tests,
+    generate_edge_case_tests,
     generate_instruction_sweep_tests,
-    generate_jalr_tests,
-    generate_misaligned_tests,
     set_pmm_field,
 )
 from testgen.priv.registry import add_priv_test_generator
@@ -50,13 +48,7 @@ def make_smnpmu(test_data: TestData) -> list[TestChunk]:
                 *generate_instruction_sweep_tests(prefix, test_data, COVERGROUP, uppers),
             ]
             if split == EDGE_CASES:
-                lines.extend(
-                    [
-                        *generate_misaligned_tests(prefix, test_data, COVERGROUP),
-                        *generate_jalr_tests(prefix, test_data, COVERGROUP),
-                        *generate_fault_address_tests(prefix, test_data, COVERGROUP),
-                    ]
-                )
+                lines.extend(generate_edge_case_tests(prefix, test_data, COVERGROUP))
             lines.extend(set_pmm_field("menvcfg", 0b00, 0, test_data, tsbi=True))
             tc.code = lines
             chunks.append(test_data.end_test_chunk())
