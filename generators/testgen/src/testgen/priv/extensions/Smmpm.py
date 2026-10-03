@@ -42,9 +42,9 @@ def make_smmpm(test_data: TestData) -> list[TestChunk]:
         # edgecases holds the remaining checks, such as misaligned accesses, JALR, access faults and MXR.
         for split, uppers in SPLITS:
             tc = test_data.begin_test_chunk(split_name=f"{label}_{split}")
+            tc.raw_data.extend(mprv_data_section())
             prefix = f"{label}_mmode"
             lines = [
-                *mprv_data_section(),
                 comment_banner(
                     f"Smmpm pointer masking -- M-mode only, PMM={pmm:#04b} (PMLEN={pmlen}), {split}",
                     "mseccfg.PMM is programmed from M-mode; every probe also runs in M-mode.",
@@ -78,8 +78,8 @@ def make_smmpm(test_data: TestData) -> list[TestChunk]:
     # menvcfg.PMM, which come from Ssnpm and Smnpm, and live in SsnpmSm and
     # SmnpmSSm.
     tc = test_data.begin_test_chunk(split_name="mprv")
+    tc.raw_data.extend(mprv_data_section())
     tc.code = [
-        *mprv_data_section(),
         *generate_mprv_mpp_m_tests(test_data, COVERGROUP),
         *set_pmm_field("mseccfg", 0b00, 0, test_data),
         "#ifdef S_SUPPORTED",

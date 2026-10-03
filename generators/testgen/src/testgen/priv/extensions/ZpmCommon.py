@@ -260,16 +260,11 @@ def data_slvl_tables(mode: str, table_label: str = "rvtest_slvl{}_pg_tbl") -> li
 
 
 def mprv_data_section() -> list[str]:
-    """Allocate data pages and optional lower-level tables for MPRV probes."""
-    lines = [
-        ".pushsection .data",
-        *data_page("pm_lo_page"),
-        *data_page("mprv_page"),
-    ]
+    """Return data pages and optional lower-level tables for MPRV probes."""
+    lines = [*data_page("pm_lo_page"), *data_page("mprv_page")]
     for mode in SV_MODES:
         guard = f"{mode.upper()}_SUPPORTED"
         lines.extend(_ifdef(guard, data_slvl_tables(mode, _MPRV_TABLE_LABEL + mode)))
-    lines.append(".popsection")
     return lines
 
 

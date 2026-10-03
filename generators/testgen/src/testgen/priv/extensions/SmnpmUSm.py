@@ -31,8 +31,8 @@ def make_smnpmusm(test_data: TestData) -> list[TestChunk]:
     whether the pointer is masked, and mseccfg.PMM does not apply.
     """
     tc = test_data.begin_test_chunk()
+    tc.raw_data.extend(mprv_data_section())
     tc.code = [
-        *mprv_data_section(),
         *generate_mprv_lower_mode_tests(
             test_data,
             COVERGROUP,

@@ -50,6 +50,20 @@ def make_ssnpm(test_data: TestData) -> list[TestChunk]:
             # edgecases holds the remaining checks, such as misaligned accesses, JALR, access faults and MXR.
             for split, uppers in SPLITS:
                 tc = test_data.begin_test_chunk(split_name=f"{mode}_{label}_{split}")
+                guard = MODE_GUARDS[mode]
+                if guard:
+                    tc.raw_data.append(f"#ifdef {guard}")
+                tc.raw_data.extend(data_page("pm_lo_page"))
+                if mode != "bare":
+                    tc.raw_data.extend(
+                        [
+                            *data_page("pm_hi_page"),
+                            *data_slvl_tables(mode),
+                            *data_slvl_tables(mode, "pm_img_slvl{}_pg_tbl"),
+                        ]
+                    )
+                if guard:
+                    tc.raw_data.append(f"#endif // {guard}")
                 tc.code = _ssnpm_chunk(mode, pmm, pmlen, label, split, uppers, test_data)
                 chunks.append(test_data.end_test_chunk())
     return chunks
@@ -65,18 +79,8 @@ def _ssnpm_chunk(
     guard, is_bare = MODE_GUARDS[mode], mode == "bare"
     prefix = f"{label}_{mode}"
     lines = [] if not guard else [f"#ifdef {guard}"]
-    lines.extend([".pushsection .data", *data_page("pm_lo_page")])
-    if not is_bare:
-        lines.extend(
-            [
-                *data_page("pm_hi_page"),
-                *data_slvl_tables(mode),
-                *data_slvl_tables(mode, "pm_img_slvl{}_pg_tbl"),
-            ]
-        )
     lines.extend(
         [
-            ".popsection",
             ".p2align 12",
             "pm_utext_begin:",
             "# sstatus.SUM = 1: S-mode setup code touches the U-accessible data pages",

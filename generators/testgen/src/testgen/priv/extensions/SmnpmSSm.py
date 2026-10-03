@@ -32,8 +32,8 @@ def make_smnpmssm(test_data: TestData) -> list[TestChunk]:
     with Smmpm alone has no menvcfg.PMM to program.
     """
     tc = test_data.begin_test_chunk()
+    tc.raw_data.extend(mprv_data_section())
     tc.code = [
-        *mprv_data_section(),
         *generate_mprv_lower_mode_tests(
             test_data,
             COVERGROUP,

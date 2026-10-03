@@ -38,11 +38,9 @@ def make_smnpmu(test_data: TestData) -> list[TestChunk]:
         # edgecases holds the remaining checks, such as misaligned accesses, JALR, access faults and MXR.
         for split, uppers in SPLITS:
             tc = test_data.begin_test_chunk(split_name=f"{label}_{split}")
+            tc.raw_data.extend(data_page("pm_lo_page"))
             prefix = f"{label}_bare"
             lines = [
-                ".pushsection .data",
-                *data_page("pm_lo_page"),
-                ".popsection",
                 comment_banner(f"PMM={pmm:#04b} (PMLEN={pmlen}), physical addresses, {split}"),
                 *set_pmm_field("menvcfg", pmm, pmlen, test_data, tsbi=True),
                 *generate_instruction_sweep_tests(prefix, test_data, COVERGROUP, uppers),
